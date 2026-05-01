@@ -42,7 +42,7 @@ void task_1(uint8_t clients)
 	system("cls");
 }
 
-std::mutex mtx1, mtx2, mtx3, mtx4;
+std::unique_ptr<std::mutex[]> mtx(new std::mutex[4]);
 std::once_flag flag;
 
 static void table_header()
@@ -58,34 +58,34 @@ static void progress_bar(uint8_t cnt_of_threads)
 
 	std::call_once(flag, table_header);
 
-	mtx2.lock();
+	mtx[2].lock();
 	Console_Timer timer1;
 	Console_Layout face1;
-	mtx2.unlock();
+	mtx[2].unlock();
 
-	mtx4.lock();
+	mtx[0].lock();
 	face1.set_position(0, cnt_of_threads + 1);
 	std::cout << cnt_of_threads << "\t" << std::this_thread::get_id() << "\t";
-	mtx4.unlock();
+	mtx[0].unlock();
 
 	while (progress_bar < total)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-		mtx1.lock();
+		mtx[1].lock();
 		face1.set_position(progress_bar, cnt_of_threads + 1);
 		std::cout << char(220);
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		++progress_bar;
-		mtx1.unlock();
+		mtx[1].unlock();
 	}
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(150));
 
-	mtx3.lock();
+	mtx[3].lock();
 	face1.set_position(position4time, cnt_of_threads + 1);
 	timer1.show();
-	mtx3.unlock();
+	mtx[3].unlock();
 }
 
 void task_2(uint8_t cnt_of_threads)
