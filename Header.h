@@ -1,5 +1,6 @@
 #pragma once
-#include <chrono>оформление
+#include <atomic>
+#include <chrono>
 #include <iostream>
 #include <mutex>
 #include <string>
@@ -61,5 +62,20 @@ public:
 	void show() const
 	{
 		std::cout << "ID" << std::this_thread::get_id() << "\t" << elapsed() * 1000 << " ms" << std::endl;
+	}
+};
+
+class Data
+{
+public:
+	uint8_t _data = 0;
+	std::mutex mtx;
+	Data(uint8_t data)
+	{
+		_data = data;
+	};
+	void show_data()
+	{
+		std::cout << _data << "\t";
 	}
 };
